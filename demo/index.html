@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<head>
+  <title>Demo</title>
+</head>
+<body>
+  <script src='trimilarity.js'></script>
+  <input id="inputA" value="we are the champions">
+  <input id="inputB" value="we are number one">
+  <br/>
+  <output>
+    Output: 
+    <p id='output'></p>
+  </output>
+  <script>
+    outputElement = document.getElementById('output')
+    inputAElement = document.getElementById('inputA')
+    inputBElement = document.getElementById('inputB')
+    setInterval(f=>
+    {
+      outputElement.innerHTML = `trimilarity: ${trimilarity(inputAElement.value, inputBElement.value)}
+    <br\>
+    pTrimilarity: ${pTrimilarity(inputAElement.value, inputBElement.value)}
+    <br\>
+    duolarity: ${duolarity(inputAElement.value, inputBElement.value)}
+    <br\>
+    pDuolarity: ${pDuolarity(inputAElement.value, inputBElement.value)}
+    <br\>
+    averagelarity: ${averagelarity(inputAElement.value, inputBElement.value)}`
+    }, 50)
+  </script>
+  <img id='imageA'>
+  <img id='imageB'>
+  <br/>
+  <output>
+    Output: 
+    <p id='outputSimilarityImages'>Calculating...</p>
+  </output>
+  <img id='dogeimageA'>
+  <img id='dogeimageB'>
+  <br/>
+  <output>
+    Output: 
+    <p id='dogeoutputSimilarityImages'>Calculating...</p>
+  </output>
+  <script>
+    function xhrImgToString(url, callback) {
+      var xhr = new XMLHttpRequest();
+      xhr.onload = function() {
+        var reader = new FileReader();
+        reader.onloadend = function() {
+          callback(reader.result);
+        }
+        reader.readAsDataURL(xhr.response);
+      };
+      xhr.open('GET', url);
+      xhr.responseType = 'blob';
+      xhr.send();
+    }
+    // cats:
+    imageAElement = document.getElementById("imageA")
+    imageBElement = document.getElementById("imageB")
+    imageComparsionOutput = document.getElementById("outputSimilarityImages")
+    imageAElement.src = './catA.jpg'
+    imageBElement.src = './catB.jpg'
+    dataImageA = ""
+    xhrImgToString(imageAElement.src,f=_=>
+    {
+      dataImageA=_.substring(0,3000)
+      dataImageB = ""
+      xhrImgToString(imageBElement.src,f=_=>
+      {
+        dataImageB=_.substring(0,3000)
+        imageComparsionOutput.innerHTML = "pDuolarity: "+pDuolarity(dataImageA,dataImageB)
+      })
+    })
+    // dogs:
+    dogeimageAElement = document.getElementById("dogeimageA")
+    dogeimageBElement = document.getElementById("dogeimageB")
+    dogeimageComparsionOutput = document.getElementById("dogeoutputSimilarityImages")
+    dogeimageAElement.src = './dogA.jpg'
+    dogeimageBElement.src = './dogB.jpg'
+    dogedataImageA = ""
+    xhrImgToString(dogeimageAElement.src,f=_=>
+    {
+      dogedataImageA=_.substring(0,3000)
+      dogedataImageB = ""
+      xhrImgToString(dogeimageBElement.src,f=_=>
+      {
+        dogedataImageB=_.substring(0,3000)
+        dogeimageComparsionOutput.innerHTML = "pDuolarity: "+pDuolarity(dogedataImageA,dogedataImageB)
+      })
+    })
+  </script>
+  <!-- chat bots made easy lmao -->
+  <strong style='font-size: calc(13.37px*2);'>Chatbot demo!</strong><br/>
+  <input id='chatbotInput' placeholder="talk to me"></input><br/>
+  <output id='replyOutput'></output>
+  <script>
+    replyOutput = document.getElementById('replyOutput')
+    function reply(string)
+    {
+      return bestMatch(averagelarity, string.toLowerCase(),
+      {
+        'hi' : 'Hello! :)',
+        'hello' : 'Hi there!',
+        'how are you': 'I\'m pretty good, what about you?',
+        'tell me something interesting': 'I am awesome.'
+      })
+    }
+    setInterval(f=>{replyOutput.innerHTML = 'Reply: '+reply(chatbotInput.value).match + " --> with score of " + reply(chatbotInput.value).value}, 30)
+  </script><br/><br/>
+  <strong>
+  It only knows how to answer to<br/>
+  - hi<br/>
+  - hello<br/>
+  - how are you<br/>
+  - tell me something interesting<br/>
+  </strong>
+</body>
